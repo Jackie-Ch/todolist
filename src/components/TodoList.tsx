@@ -1,20 +1,15 @@
-import { ITodoListProps } from '../types/data';
 import TodoItem from './TodoItem';
+import { storeTodo } from '../store/StoreTodo';
+import { observer } from 'mobx-react-lite';
 
-const TodoList: React.FC<ITodoListProps> = (props) => {
-  const { items, toggleTodo, deleteTodo } = props;
+const TodoList: React.FC = () => {
   return (
     <div>
-      {items.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          deleteTodo={deleteTodo}
-          toggleTodo={toggleTodo}
-          {...todo}
-        />
+      {storeTodo.todos.map((todo) => (
+        <TodoItem key={todo.id} {...todo} />
       ))}
     </div>
   );
 };
 
-export default TodoList;
+export default observer(TodoList);

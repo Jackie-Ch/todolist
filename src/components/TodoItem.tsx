@@ -1,19 +1,19 @@
-import { ITodoItem } from '../types/data';
+import { ITodo } from '../types/data';
+import { storeTodo } from '../store/StoreTodo';
+import { observer } from 'mobx-react-lite';
 
-const TodoItem: React.FC<ITodoItem> = (todo) => {
-  const { id, title, completed, deleteTodo, toggleTodo } = todo;
-
+const TodoItem: React.FC<ITodo> = ({ id, title, completed }) => {
   return (
     <div>
       <input
         type="checkbox"
         checked={completed}
-        onChange={() => toggleTodo(id)}
+        onChange={() => storeTodo.toggleTodo(id)}
       />
       <span>{title}</span>
-      <button onClick={() => deleteTodo(id)}>X</button>
+      <button onClick={() => storeTodo.deleteTodo(id)}>X</button>
     </div>
   );
 };
 
-export default TodoItem;
+export default observer(TodoItem);
