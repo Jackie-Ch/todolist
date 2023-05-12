@@ -4,26 +4,46 @@ import { ITodo } from '../types/data';
 class StoreTodo {
   value = '';
   todos: ITodo[] = [];
+  activeModal = false;
+  // length = this.todos.length;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  addTodo(value: string): void {
-    if (value) {
-      this.todos = [
-        ...this.todos,
-        {
-          id: Date.now(),
-          title: value,
-          completed: false,
-        },
-      ];
-    }
-    this.value = '';
+  getTodos() {
+    fetch('http://localhost:3001/todos')
+      .then((todo) => todo.json())
+      .then((arrayTodo) => {
+        this.todos = arrayTodo;
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
-  deleteTodo(id: number): void {
+  addTodo(value: string): any {
+    const newTodo = {
+      title: value,
+      completed: false,
+    };
+
+    fetch('http://localhost:3001/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTodo),
+    });
+
+    console.log('addTodos run');
+
+    this.value = '';
+
+    this.activeModal = false;
+
+    // this.length += 1;
+  }
+
+  deleteTodo(id: number) {
     this.todos = this.todos.filter((todo) => todo.id !== id);
   }
 
@@ -41,6 +61,12 @@ class StoreTodo {
     if (event.code === 'Enter') {
       storeTodo.addTodo(storeTodo.value);
     }
+  }
+
+  activeModalWindow(bool: boolean) {
+    console.log('activeModalWindow', bool);
+
+    this.activeModal = bool;
   }
 }
 
